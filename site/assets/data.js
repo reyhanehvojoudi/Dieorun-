@@ -1,7 +1,7 @@
 // All fixtures are synthetic, including approximate district centers and coordinates.
 export const sports={run:'دویدن',functional:'فانکشنال',crossfit:'کراسفیت',volleyball:'والیبال ساحلی',basketball:'بسکتبال',football:'فوتبال',yoga:'یوگا',cycling:'دوچرخه‌سواری'};
 export const kinds={class:'کلاس',event:'رویداد',competition:'مسابقه',challenge:'چالش'};
-export const colors={class:'#b8c9fb',event:'#d8fc60',competition:'#ffb887',challenge:'#d6b5f6'};
+export const colors={class:'#f9c7a0',event:'#f47700',competition:'#ffc75f',challenge:'#c8c4be'};
 export const centers=[[35.805,51.445],[35.758,51.365],[35.765,51.437],[35.751,51.518],[35.747,51.302],[35.727,51.405],[35.723,51.453],[35.729,51.491],[35.685,51.337],[35.693,51.372],[35.678,51.396],[35.672,51.428],[35.699,51.488],[35.676,51.484],[35.648,51.467],[35.645,51.417],[35.657,51.365],[35.645,51.306],[35.620,51.376],[35.593,51.445],[35.704,51.241],[35.754,51.219]];
 export function makeDemoEvents(now=new Date()){
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
