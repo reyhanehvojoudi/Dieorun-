@@ -1,0 +1,7 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {makeDemoEvents,filterEvents,sports,kinds} from '../site/assets/data.js';
+const now=new Date('2026-10-21T06:00:00Z'),es=makeDemoEvents(now);
+test('264 unique, clearly marked samples across 22 districts, eight sports and four types',()=>{assert.equal(es.length,264);assert.equal(new Set(es.map(x=>x.id)).size,264);assert.equal(new Set(es.map(x=>x.district)).size,22);assert.equal(new Set(es.map(x=>x.sport)).size,8);assert.equal(new Set(es.map(x=>x.type)).size,4);for(const e of es){assert.ok(e.sample);assert.ok(e.remaining<=e.capacity);assert.ok(e.lat>35.45&&e.lat<35.9&&e.lng>51&&e.lng<51.7)}});
+test('filters compose by type, district, budget and sport',()=>{const e=es[14],f={district:e.district,type:e.type,sport:e.sport,fee:'free'};const r=filterEvents(es,f,now);assert.ok(r.length>0);assert.ok(r.every(x=>x.district===e.district&&x.sport===e.sport&&x.type===e.type&&x.fee===0))});
+test('today and evening use Tehran, not browser timezone',()=>{const rows=[{...es[0],start:'2026-10-20T21:00:00Z'},{...es[0],start:'2026-10-21T15:00:00Z'},{...es[0],start:'2026-10-21T21:00:00Z'}];assert.equal(filterEvents(rows,{when:'today'},now).length,2);assert.equal(filterEvents(rows,{when:'evening'},now).length,1)});
+test('empty search and price sorting',()=>{assert.equal(filterEvents(es,{q:'NONEXISTENT'},now).length,0);let r=filterEvents(es,{sort:'price'},now);assert.ok(r.every((e,i)=>!i||r[i-1].fee<=e.fee))});

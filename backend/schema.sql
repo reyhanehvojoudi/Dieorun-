@@ -1,0 +1,11 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,name TEXT NOT NULL,phone TEXT NOT NULL,created_at TEXT NOT NULL,consent_version TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS otps(email TEXT PRIMARY KEY,digest TEXT NOT NULL,expires INTEGER NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,profile TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sessions(digest TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),expires INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS limits(key TEXT PRIMARY KEY,count INTEGER NOT NULL,expires INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY,data TEXT NOT NULL,fee INTEGER NOT NULL CHECK(fee>=0),capacity INTEGER NOT NULL CHECK(capacity>0),start TEXT NOT NULL,published INTEGER NOT NULL DEFAULT 0,sample INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS orders(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id),event_id TEXT NOT NULL REFERENCES events(id),title TEXT NOT NULL,amount INTEGER NOT NULL CHECK(amount>=0),amount_rial INTEGER NOT NULL,status TEXT NOT NULL CHECK(status IN ('pending','paid','free','failed','expired','refund_required','refunded')),authority TEXT UNIQUE,reference TEXT,created_at TEXT NOT NULL,expires INTEGER NOT NULL, last_checked INTEGER NOT NULL DEFAULT 0);
+CREATE UNIQUE INDEX IF NOT EXISTS one_active_registration ON orders(user_id,event_id) WHERE status IN ('pending','paid','free');
+CREATE INDEX IF NOT EXISTS order_capacity ON orders(event_id,status,expires);
+CREATE INDEX IF NOT EXISTS order_user ON orders(user_id);
+CREATE TABLE IF NOT EXISTS outbox(id TEXT PRIMARY KEY,payload TEXT NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,next_attempt INTEGER NOT NULL DEFAULT 0,delivered INTEGER NOT NULL DEFAULT 0);

@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dieorun-club",
+  "main": "backend/worker.mjs",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./site", "binding": "ASSETS", "run_worker_first": true },
+  "d1_databases": [{"binding": "DB", "database_name": "dieorun", "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"}],
+  "vars": {
+    "PUBLIC_ORIGIN": "https://REPLACE_WITH_YOUR_WORKER_DOMAIN",
+    "ADMIN_EMAILS": "r.s.vojoudi@gmail.com",
+    "PAYMENTS_ENABLED": "false",
+    "LEGAL_APPROVED": "false",
+    "ZARINPAL_SANDBOX": "true"
+  },
+  "triggers": { "crons": ["*/10 * * * *"] }
+}
